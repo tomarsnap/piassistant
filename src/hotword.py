@@ -21,6 +21,7 @@ import argparse
 import json
 import os.path
 import pathlib2 as pathlib
+import subprocess
 
 import google.oauth2.credentials
 
@@ -54,6 +55,8 @@ def process_event(event):
         event(event.Event): The current event to process.
     """
     if event.type == EventType.ON_CONVERSATION_TURN_STARTED:
+        subprocess.Popen(["aplay", "/home/pi/piassistant/src/sample-audio/Fb.wav"], stdin=subprocess.PIPE,
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         print()
 
     print(event)
