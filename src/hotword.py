@@ -124,7 +124,7 @@ def main():
 
     with Assistant(credentials, device_model_id) as assistant:
         events = assistant.start()
-        subprocess.Popen(["aplay", "/home/pi/piassistant/sample-audio/startup.wav"], stdin=subprocess.PIPE,
+        subprocess.Popen(["aplay", "/home/pi/piassistant/src/sample-audio/startup.wav"], stdin=subprocess.PIPE,
                          stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         device_id = assistant.device_id
