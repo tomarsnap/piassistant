@@ -22,6 +22,7 @@ import json
 import os.path
 import pathlib2 as pathlib
 import subprocess
+from mediaplayer import player
 
 import google.oauth2.credentials
 
@@ -67,6 +68,15 @@ def process_event(event):
     if event.type == EventType.ON_DEVICE_ACTION:
         for command, params in event.actions:
             print('Do command', command, 'with params', str(params))
+
+    if event.type == EventType.ON_ALERT_STARTED:
+        if event.AlertType == 0:    # Alarm
+            player.loop_audio_file("sample-audio/songofstorms.mp3")
+
+    if event.type == EventType.ON_ALERT_FINISHED:
+        if event.AlertType == 0:    # Alarm
+            player.stop_vlc()
+
 
 
 def main():
@@ -148,6 +158,13 @@ def main():
 
         for event in events:
             process_event(event)
+            usrcmd = event.args
+            if "update" in str(usrcmd).lower():
+                subprocess.Popen(["sudo systemctl stop piassistant.service", "&&",
+                                  "git -C ~/piassistant pull", "&&",
+                                  "sudo systemctl start piassistant.service"], stdin=subprocess.PIPE,
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
 
 
 if __name__ == '__main__':
