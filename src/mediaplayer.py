@@ -130,4 +130,4 @@ class vlcplayer:
             os.system("sudo rm " + file)
 
 
-player = vlcplayer()
+mediaplayer = vlcplayer()

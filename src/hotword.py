@@ -22,7 +22,7 @@ import json
 import os.path
 import pathlib2 as pathlib
 import subprocess
-from mediaplayer import player
+from mediaplayer import mediaplayer
 
 import google.oauth2.credentials
 
@@ -72,12 +72,12 @@ def process_event(event):
     if event.type == EventType.ON_ALERT_STARTED:
         if "alert_type" in event.args():
             if event.args()["alert_type"] == AlertType.ALARM:
-                player.loop_audio_file("sample-audio/songofstorms.mp3")
+                mediaplayer.loop_audio_file("sample-audio/songofstorms.mp3")
 
     if event.type == EventType.ON_ALERT_FINISHED:
         if "alert_type" in event.args():
             if event.args()["alert_type"] == AlertType.ALARM:
-                player.stop_vlc()
+                mediaplayer.stop_vlc()
 
 
 
