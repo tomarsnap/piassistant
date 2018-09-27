@@ -161,7 +161,7 @@ def main():
             process_event(event)
             usrcmd = event.args
             if "update" in str(usrcmd).lower():
-                subprocess.Popen(["sudo", "systemctl", "stop", "piassistant.service", "&&",
+                subprocess.call(["sudo", "systemctl", "stop", "piassistant.service", "&&",
                                   "git", "-C", "~/piassistant", "pull", "&&",
                                   "sudo", "systemctl", "start", "piassistant.service"], stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
