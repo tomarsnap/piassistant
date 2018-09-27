@@ -72,7 +72,7 @@ def process_event(event):
     if event.type == EventType.ON_ALERT_STARTED:
         if "alert_type" in event.args:
             if event.args["alert_type"] == AlertType.ALARM:
-                mediaplayer.loop_audio_file("sample-audio/songofstorms.mp3")
+                mediaplayer.loop_audio_file("piassistant/src/sample-audio/songofstorms.mp3")
 
     if event.type == EventType.ON_ALERT_FINISHED:
         if "alert_type" in event.args:
