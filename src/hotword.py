@@ -70,8 +70,9 @@ def process_event(event):
             print('Do command', command, 'with params', str(params))
 
     if event.type == EventType.ON_ALERT_STARTED:
-        if event.AlertType == 0:    # Alarm
-            player.loop_audio_file("sample-audio/songofstorms.mp3")
+        if "alert_type" in event.args():
+            if event.args()["alert_type"] == AlertType.ALARM:
+                player.loop_audio_file("sample-audio/songofstorms.mp3")
 
     if event.type == EventType.ON_ALERT_FINISHED:
         if "alert_type" in event.args():

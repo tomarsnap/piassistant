@@ -10,7 +10,7 @@ import os.path
 class vlcplayer:
 
     def __init__(self):
-        self.libvlc_Instance = vlc.Instance('--verbose 0')
+        self.libvlc_Instance = vlc.Instance('--verbose 0', '--input-repeat=-1')
         self.libvlc_player = self.libvlc_Instance.media_player_new()
         # self.libvlc_list_player = self.libvlc_Instance.media_list_player_new()
         # self.libvlc_Media_list = self.libvlc_Instance.media_list_new()
