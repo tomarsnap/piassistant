@@ -27,7 +27,7 @@ from mediaplayer import player
 import google.oauth2.credentials
 
 from google.assistant.library import Assistant
-from google.assistant.library.event import EventType
+from google.assistant.library.event import EventType, AlertType
 from google.assistant.library.file_helpers import existing_file
 from google.assistant.library.device_helpers import register_device
 
@@ -74,8 +74,9 @@ def process_event(event):
             player.loop_audio_file("sample-audio/songofstorms.mp3")
 
     if event.type == EventType.ON_ALERT_FINISHED:
-        if event.AlertType == 0:    # Alarm
-            player.stop_vlc()
+        if "alert_type" in event.args():
+            if event.args()["alert_type"] == AlertType.ALARM:
+                player.stop_vlc()
 
 
 
