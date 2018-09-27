@@ -19,14 +19,12 @@ class vlcplayer:
         # self.libvlc_player_event_manager= self.libvlc_player.event_manager()
 
     def play_audio_file(self, fname):
-        Instance = vlc.Instance()
-        player = Instance.media_player_new()
+        player = self.libvlc_player
         player.set_mrl(fname)
         player.play()
 
     def loop_audio_file(self, fname):
-        Instance = vlc.Instance()
-        player = Instance.media_player_new()
+        player = self.libvlc_player
         player.set_mrl(fname, "--loop")
         player.play()
 
