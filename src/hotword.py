@@ -161,10 +161,12 @@ def main():
         for event in events:
             process_event(event)
             usrcmd = event.args
-            if "update" in str(usrcmd).lower():
+            if "update yourself" in str(usrcmd).lower():
                 assistant.stop_conversation()
-                subprocess.call(["git", "-C", "~/piassistant", "pull"], stdin=subprocess.PIPE,
+                process = subprocess.Popen(["git", "-C", "~/piassistant", "pull"], stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                stdout = process.communicate()[0]
+                print(stdout)
                 subprocess.call(["sudo", "systemctl", "restart", "piassistant.service"], stdin=subprocess.PIPE,
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
