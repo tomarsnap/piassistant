@@ -53,7 +53,7 @@ WARNING_NOT_REGISTERED = """
 power = LED(5)
 power.on()
 pixel_ring.set_brightness(20)
-pixel_ring.pattern = CustomPattern()
+pixel_ring.pattern = CustomPattern(pixel_ring.show)
 
 
 def process_event(event):
