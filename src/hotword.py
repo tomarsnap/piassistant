@@ -30,6 +30,8 @@ from google.assistant.library import Assistant
 from google.assistant.library.event import EventType, AlertType
 from google.assistant.library.file_helpers import existing_file
 from google.assistant.library.device_helpers import register_device
+from pixel_ring import pixel_ring
+from gpiozero import LED
 
 try:
     FileNotFoundError
@@ -45,6 +47,12 @@ WARNING_NOT_REGISTERED = """
     https://developers.google.com/assistant/sdk/guides/library/python/embed/register-device
 """
 
+# If the hardware is ReSpeaker 4 Mic Array for Pi or ReSpeaker V2,
+# there is a power-enable pin which should be enabled at first. I guess this applies to 6-Array as well?
+power = LED(5)
+power.on()
+pixel_ring.set_brightness(20)
+
 
 def process_event(event):
     """Pretty prints events.
@@ -55,30 +63,39 @@ def process_event(event):
     Args:
         event(event.Event): The current event to process.
     """
+    print("event:" + str(event))
+
     if event.type == EventType.ON_CONVERSATION_TURN_STARTED:
         subprocess.Popen(["aplay", "/home/pi/piassistant/src/sample-audio/Fb.wav"], stdin=subprocess.PIPE,
                          stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        print()
+        pixel_ring.listen()
 
-    print(event)
+    if event.type == EventType.ON_RESPONDING_STARTED:
+        pixel_ring.speak()
+
+    if event.type == EventType.ON_RESPONDING_FINISHED or event.type == EventType.ON_CONVERSATION_TURN_TIMEOUT:
+        pixel_ring.off()
+
+    if event.type == EventType.ON_END_OF_UTTERANCE:
+        pixel_ring.think()
 
     if (event.type == EventType.ON_CONVERSATION_TURN_FINISHED and
             event.args and not event.args['with_follow_on_turn']):
-        print()
+        pixel_ring.off()
+
     if event.type == EventType.ON_DEVICE_ACTION:
         for command, params in event.actions:
             print('Do command', command, 'with params', str(params))
 
-    if event.type == EventType.ON_ALERT_STARTED:
-        if "alert_type" in event.args:
-            if event.args["alert_type"] == AlertType.ALARM:
-                mediaplayer.loop_audio_file("piassistant/src/sample-audio/songofstorms.mp3")
-
-    if event.type == EventType.ON_ALERT_FINISHED:
-        if "alert_type" in event.args:
-            if event.args["alert_type"] == AlertType.ALARM:
-                mediaplayer.stop_vlc()
-
+    # if event.type == EventType.ON_ALERT_STARTED:
+    #     if "alert_type" in event.args:
+    #         if event.args["alert_type"] == AlertType.ALARM:
+    #             mediaplayer.loop_audio_file("piassistant/src/sample-audio/songofstorms.mp3")
+    #
+    # if event.type == EventType.ON_ALERT_FINISHED:
+    #     if "alert_type" in event.args:
+    #         if event.args["alert_type"] == AlertType.ALARM:
+    #             mediaplayer.stop_vlc()
 
 
 def main():
@@ -138,7 +155,7 @@ def main():
         events = assistant.start()
         subprocess.Popen(["aplay", "/home/pi/piassistant/src/sample-audio/startup.wav"], stdin=subprocess.PIPE,
                          stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
+        pixel_ring.wakeup()
         device_id = assistant.device_id
         print('device_model_id:', device_model_id)
         print('device_id:', device_id + '\n')
@@ -169,7 +186,6 @@ def main():
                 print(stdout)
                 subprocess.call(["sudo", "systemctl", "restart", "piassistant.service"], stdin=subprocess.PIPE,
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
 
 
 if __name__ == '__main__':
