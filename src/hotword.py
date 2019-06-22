@@ -31,6 +31,7 @@ from google.assistant.library.event import EventType, AlertType
 from google.assistant.library.file_helpers import existing_file
 from google.assistant.library.device_helpers import register_device
 from pixel_ring import pixel_ring
+from custom_pattern import CustomPattern
 from gpiozero import LED
 
 try:
@@ -52,6 +53,7 @@ WARNING_NOT_REGISTERED = """
 power = LED(5)
 power.on()
 pixel_ring.set_brightness(20)
+pixel_ring.pattern = CustomPattern()
 
 
 def process_event(event):
@@ -185,6 +187,10 @@ def main():
                 stdout = process.communicate()[0]
                 print(stdout)
                 subprocess.call(["sudo", "systemctl", "restart", "piassistant.service"], stdin=subprocess.PIPE,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            if "turn" and "on" and "pc" in str(usrcmd).lower():
+                assistant.stop_conversation()
+                subprocess.call(["wakeonlan", "D0-50-99-1B-03-5D"], stdin=subprocess.PIPE,
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
