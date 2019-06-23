@@ -54,7 +54,8 @@ power = LED(5)
 power.on()
 pixel_ring.set_brightness(20)
 pixel_ring.pattern = CustomPattern(pixel_ring.show)
-
+# pixel_ring.change_pattern("google")
+pixel_ring.wakeup()
 
 def process_event(event):
     """Pretty prints events.
@@ -157,7 +158,6 @@ def main():
         events = assistant.start()
         subprocess.Popen(["aplay", "/home/pi/piassistant/src/sample-audio/startup.wav"], stdin=subprocess.PIPE,
                          stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        pixel_ring.wakeup()
         device_id = assistant.device_id
         print('device_model_id:', device_model_id)
         print('device_id:', device_id + '\n')
@@ -176,7 +176,7 @@ def main():
                     }, f)
             else:
                 print(WARNING_NOT_REGISTERED)
-
+        pixel_ring.off()
         for event in events:
             process_event(event)
             usrcmd = event.args
