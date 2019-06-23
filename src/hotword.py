@@ -19,7 +19,7 @@ from __future__ import print_function
 
 import argparse
 import json
-import os.path
+import os
 import pathlib2 as pathlib
 import subprocess
 from mediaplayer import mediaplayer
@@ -156,8 +156,7 @@ def main():
 
     with Assistant(credentials, device_model_id) as assistant:
         events = assistant.start()
-        subprocess.Popen(["aplay", "/home/pi/piassistant/src/sample-audio/startup.wav"], stdin=subprocess.PIPE,
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        os.system('mpg321 ../sample-audio/startup_2.mp3 &')
         device_id = assistant.device_id
         print('device_model_id:', device_model_id)
         print('device_id:', device_id + '\n')
